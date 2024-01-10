@@ -1,26 +1,19 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.UserRequest;
-import com.example.demo.dto.UserResponse;
+import com.example.demo.dto.user.UserRequest;
+import com.example.demo.dto.user.UserResponse;
 import com.example.demo.entities.User;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.NotFoundException;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-public class MainController {
+public class UserController {
 
     private UserRepository userRepository;
     private final UserService userService;
@@ -38,7 +31,7 @@ public class MainController {
         return "Salam " + name + " Gospodin!!";
     }
     // request
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public String register(@RequestBody UserRequest userRequest){
         userService.register(userRequest);
         return userRequest.getName() + " registered successfully!";
@@ -49,18 +42,18 @@ public class MainController {
         return userService.getById(id);
     }
 
-    @GetMapping("/allusers")
+    @GetMapping("/user/allusers")
     public List<User> users(){
         return userRepository.findAll();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable Long id){
         userService.deleteById(id);
         return "User with id: " + id + " successfully deleted";
     }
 
-    @PutMapping("/fullupdate/{id}")
+    @PutMapping("/user/fullupdate/{id}")
     public UserResponse userUpdate(@PathVariable Long id, @RequestBody UserRequest userRequest){
         userService.updateById(id, userRequest);
         return userService.getById(id);
