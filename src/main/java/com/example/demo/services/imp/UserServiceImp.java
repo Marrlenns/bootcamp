@@ -47,7 +47,7 @@ public class UserServiceImp implements UserService {
     public void deleteById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty())
-            throw new NotFoundException("12345", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("User doesn't exist!", HttpStatus.BAD_REQUEST);
         else userRepository.deleteById(id);
     }
 
