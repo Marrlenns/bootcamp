@@ -42,7 +42,7 @@ public class UserController {
         return userService.getById(id);
     }
 
-    @GetMapping("/user/allusers")
+    @GetMapping("/user/all")
     public List<User> users(){
         return userRepository.findAll();
     }

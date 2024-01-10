@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.dto.UserRequest;
-import com.example.demo.dto.UserResponse;
+import com.example.demo.dto.user.UserRequest;
+import com.example.demo.dto.user.UserResponse;
 
 public interface UserService {
     UserResponse getById(Long id);

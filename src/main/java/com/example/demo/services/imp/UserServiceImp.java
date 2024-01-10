@@ -1,7 +1,7 @@
 package com.example.demo.services.imp;
 
-import com.example.demo.dto.UserRequest;
-import com.example.demo.dto.UserResponse;
+import com.example.demo.dto.user.UserRequest;
+import com.example.demo.dto.user.UserResponse;
 import com.example.demo.entities.User;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repositories.UserRepository;
@@ -19,10 +19,8 @@ public class UserServiceImp implements UserService {
     @Override
     public UserResponse getById(Long id){
         Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()){
-            System.out.println("User does not exist!");
-            return null;
-        }
+        if(user.isEmpty())
+            throw new NotFoundException("User doesn't exist!", HttpStatus.BAD_REQUEST);
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.get().getId());
         userResponse.setName(user.get().getName());
@@ -33,8 +31,6 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void register(UserRequest userRequest) {
-        if (userRequest.getName().contains("@"))
-            throw new NotFoundException("ff", HttpStatus.BAD_GATEWAY);
         User user = new User();
         user.setAge(userRequest.getAge());
         user.setName(userRequest.getName());
@@ -55,12 +51,10 @@ public class UserServiceImp implements UserService {
     public void updateById(Long id, UserRequest userRequest){
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty())
-            System.out.println("User doesn't exist");
-        else{
-            user.get().setAge(userRequest.getAge());
-            user.get().setName(userRequest.getName());
-            user.get().setCourse(userRequest.getCourse());
-            userRepository.save(user.get());
-        }
+            throw new NotFoundException("User doesn't exist!", HttpStatus.BAD_REQUEST);
+        user.get().setAge(userRequest.getAge());
+        user.get().setName(userRequest.getName());
+        user.get().setCourse(userRequest.getCourse());
+        userRepository.save(user.get());
     }
 }
