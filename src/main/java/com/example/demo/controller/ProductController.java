@@ -23,10 +23,10 @@ public class ProductController {
     }
 
     @GetMapping("/product/all")
-    public List<Product> products(){return productRepository.findAll();}
+    public List<ProductResponse> products(){return productService.findAll();}
 
     @GetMapping("/product/{id}")
-    public ProductResponse productResponse(@PathVariable Long id){
+    public ProductDetailResponse productResponse(@PathVariable Long id){
         return productService.getById(id);
     }
 
@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @PutMapping("/product/fullupdate/{id}")
-    public ProductResponse productUpdate(@PathVariable Long id, @RequestBody ProductRequest productRequest){
+    public ProductDetailResponse productUpdate(@PathVariable Long id, @RequestBody ProductRequest productRequest){
         productService.updateById(id, productRequest);
         return productService.getById(id);
     }

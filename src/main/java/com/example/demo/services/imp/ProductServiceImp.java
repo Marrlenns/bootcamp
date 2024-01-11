@@ -5,12 +5,14 @@ import com.example.demo.entities.Product;
 import com.example.demo.enums.Type;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.mapper.ProductMapper;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     public boolean checkType(String s){
         for (Type type: Type.values())
@@ -30,10 +33,12 @@ public class ProductServiceImp implements ProductService {
     @Override
     public void register(ProductRequest productRequest){
         Product product = new Product();
-        product.setName(productRequest.getName());
-        System.out.println(productRequest.getType());
-        if(!checkType(productRequest.getType()))
+
+        if(!checkType(productRequest.getType())) {
             throw new BadRequestException("This type doesn't exist!");
+        }
+        
+        product.setName(productRequest.getName());
         product.setType(Type.valueOf(productRequest.getType()));
         product.setDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
@@ -42,18 +47,17 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse getById(Long id) {
+    public List<ProductResponse> findAll(){
+        List<Product> products = productRepository.findAll();
+        return productMapper.toDtos(products);
+    }
+
+    @Override
+    public ProductDetailResponse getById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.isEmpty())
             throw new NotFoundException("Product doesn't exist!", HttpStatus.BAD_REQUEST);
-        ProductResponse productResponse = new ProductResponse();
-        productResponse.setId(product.get().getId());
-        productResponse.setName(product.get().getName());
-        productResponse.setType(product.get().getType());
-        productResponse.setPrice(product.get().getPrice());
-        productResponse.setDescription(product.get().getDescription());
-        productResponse.setCreated_date(product.get().getCreated_date());
-        return productResponse;
+        return productMapper.toDetailDto(product.get());
     }
 
     @Override
@@ -70,6 +74,8 @@ public class ProductServiceImp implements ProductService {
         if(product.isEmpty())
             throw new NotFoundException("Product doesn't exist!", HttpStatus.BAD_REQUEST);
         product.get().setName(productRequest.getName());
+        if(!checkType(productRequest.getType()))
+            throw new BadRequestException("You can't change to this type!");
         product.get().setType(Type.valueOf(productRequest.getType()));
         product.get().setCreated_date(productRequest.getCreated_date());
         product.get().setPrice(productRequest.getPrice());
