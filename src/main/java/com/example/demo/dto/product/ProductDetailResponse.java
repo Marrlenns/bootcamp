@@ -13,4 +13,5 @@ public class ProductDetailResponse {
     private Integer price;
     private String description;
     private String created_date;
+    private String owner;
 }

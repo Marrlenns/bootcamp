@@ -2,11 +2,13 @@ package com.example.demo.services.imp;
 
 import com.example.demo.dto.product.*;
 import com.example.demo.entities.Product;
+import com.example.demo.entities.User;
 import com.example.demo.enums.Type;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.ProductMapper;
 import com.example.demo.repositories.ProductRepository;
+import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final UserRepository userRepository;
 
     public boolean checkType(String s){
         for (Type type: Type.values())
@@ -81,6 +84,14 @@ public class ProductServiceImp implements ProductService {
         product.get().setPrice(productRequest.getPrice());
         product.get().setDescription(productRequest.getDescription());
         productRepository.save(product.get());
+    }
+
+    @Override
+    public List<ProductResponse> getUserProducts(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty())
+            throw new NotFoundException("This user doesn't exist!", HttpStatus.NOT_FOUND);
+        return productMapper.toDtos(user.get().getUserProducts());
     }
 
 }

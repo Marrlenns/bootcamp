@@ -12,4 +12,5 @@ public class ProductRequest {
     private String description;
     private Integer price;
     private String created_date;
+    private Integer ownerId;
 }

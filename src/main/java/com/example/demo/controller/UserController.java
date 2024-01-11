@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequestMapping("/user")
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -31,29 +32,29 @@ public class UserController {
         return "Salam " + name + " Gospodin!!";
     }
     // request
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     public String register(@RequestBody UserRequest userRequest){
         userService.register(userRequest);
         return userRequest.getName() + " registered successfully!";
     }
     //response
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public UserResponse userResponse(@PathVariable Long id){
         return userService.getById(id);
     }
 
-    @GetMapping("/user/all")
+    @GetMapping("/all")
     public List<User> users(){
         return userRepository.findAll();
     }
 
-    @DeleteMapping("/user/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id){
         userService.deleteById(id);
         return "User with id: " + id + " successfully deleted";
     }
 
-    @PutMapping("/user/fullupdate/{id}")
+    @PutMapping("/fullupdate/{id}")
     public UserResponse userUpdate(@PathVariable Long id, @RequestBody UserRequest userRequest){
         userService.updateById(id, userRequest);
         return userService.getById(id);

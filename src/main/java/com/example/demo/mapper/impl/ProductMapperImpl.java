@@ -20,6 +20,10 @@ public class ProductMapperImpl implements ProductMapper {
         productDetailResponse.setPrice(product.getPrice());
         productDetailResponse.setDescription(product.getDescription());
         productDetailResponse.setCreated_date(product.getCreated_date());
+        if(product.getOwner() == null)
+            productDetailResponse.setOwner("No owner");
+        else
+            productDetailResponse.setOwner(product.getOwner().getName());
         return productDetailResponse;
     }
 

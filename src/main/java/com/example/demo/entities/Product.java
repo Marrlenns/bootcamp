@@ -22,4 +22,6 @@ public class Product {
     private int price;
     private String created_date;
 
+    @ManyToOne
+    User owner;
 }

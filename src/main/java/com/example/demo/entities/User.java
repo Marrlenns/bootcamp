@@ -5,6 +5,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -17,4 +19,8 @@ public class User {
     private String name;
     private Integer age;
     private Integer course;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Product> userProducts;
+
 }
