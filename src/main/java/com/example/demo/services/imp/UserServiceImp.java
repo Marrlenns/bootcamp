@@ -4,6 +4,7 @@ import com.example.demo.dto.user.UserRequest;
 import com.example.demo.dto.user.UserResponse;
 import com.example.demo.entities.User;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
 import lombok.AllArgsConstructor;
@@ -16,17 +17,13 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     @Override
     public UserResponse getById(Long id){
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty())
             throw new NotFoundException("User doesn't exist!", HttpStatus.BAD_REQUEST);
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.get().getId());
-        userResponse.setName(user.get().getName());
-        userResponse.setCourse(user.get().getCourse());
-        userResponse.setAge(user.get().getAge());
-        return userResponse;
+        return userMapper.toDto(user.get());
     }
 
     @Override
